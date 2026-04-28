@@ -17,22 +17,48 @@
 
     <!-- PROFIL KORT -->
     <section class="profile-card">
+        <button id="edit-mode-btn">Edit</button>
         <h2>Ola, 18</h2>
         <p class="interests">🎮 Gaming • 🎵 Musikk • ⚽ Sport</p>
     </section>
 
-    <!-- GRUPPER -->
-    <section class="groups">
-        <h3>Dine grupper</h3>
-        <div class="group-card">🎮 Gaming Squad</div>
-        <div class="group-card">🎵 Musikk klubb</div>
+    <!-- BOTTOM SECTION -->
+    <div class="bottom-section">
+        <!-- GRUPPER -->
+        <section class="groups">
+            <h3>Dine grupper</h3>
+            <button class="group-btn">🎮 Gaming Squad</button>
+            <button class="group-btn">🎵 Musikk klubb</button>
 
-        <h3>Finn nye grupper</h3>
-        <div class="group-card">♟️ Brettspill kveld</div>
-        <div class="group-card">🌍 Språk gruppe</div>
+            <h3>Finn nye grupper</h3>
+            <button class="group-btn">♟️ Brettspill kveld</button>
+            <button class="group-btn">🌍 Språk gruppe</button>
 
-        <button class="create-btn">+ Lag ny gruppe</button>
-    </section>
+            <button class="create-btn">+ Lag ny gruppe</button>
+        </section>
+
+        <!-- BIO -->
+        <section class="bio">
+            <h3>Bio</h3>
+            <p id="bio-text">Hei! Jeg er Ola, 18 år gammel. Jeg elsker gaming, musikk og sport. Jeg spiller mye dataspill og hører på musikk hele tiden. Sport er også en stor del av livet mitt, spesielt fotball.</p>
+            <textarea id="bio-edit" style="display:none; width:100%; height:100px;"></textarea>
+            <div class="edit-only">
+                <button id="edit-bio-btn">Endre bio</button>
+                <button id="save-bio-btn" style="display:none;">Lagre</button>
+            </div>
+
+            <div class="edit-only">
+                <h4>Velg interesser (maks 3):</h4>
+                <ul class="interests-list">
+                    <li><input type="checkbox" id="gaming" value="🎮 Gaming" checked> Gaming</li>
+                    <li><input type="checkbox" id="musikk" value="🎵 Musikk" checked> Musikk</li>
+                    <li><input type="checkbox" id="sport" value="⚽ Sport" checked> Sport</li>
+                    <li><input type="checkbox" id="boksing" value="🥊 Boksing"> Boksing</li>
+                    <li><input type="checkbox" id="mat" value="🍕 Mat"> Mat</li>
+                </ul>
+            </div>
+        </section>
+    </div>
 
 </main>
 
@@ -42,6 +68,68 @@
     <div class="nav-item">💬<p>Meldinger</p></div>
     <div class="nav-item">👤<p>Profil</p></div>
 </nav>
+
+<script>
+let isEditMode = false;
+
+document.getElementById('edit-mode-btn').addEventListener('click', function() {
+    isEditMode = !isEditMode;
+    const editOnlyElements = document.querySelectorAll('.edit-only');
+    editOnlyElements.forEach(el => {
+        el.style.display = isEditMode ? 'block' : 'none';
+    });
+    this.textContent = isEditMode ? 'Done' : 'Edit';
+});
+
+document.getElementById('edit-bio-btn').addEventListener('click', function() {
+    const bioText = document.getElementById('bio-text');
+    const bioEdit = document.getElementById('bio-edit');
+    const editBtn = document.getElementById('edit-bio-btn');
+    const saveBtn = document.getElementById('save-bio-btn');
+
+    bioEdit.value = bioText.textContent;
+    bioText.style.display = 'none';
+    bioEdit.style.display = 'block';
+    editBtn.style.display = 'none';
+    saveBtn.style.display = 'inline-block';
+});
+
+document.getElementById('save-bio-btn').addEventListener('click', function() {
+    const bioText = document.getElementById('bio-text');
+    const bioEdit = document.getElementById('bio-edit');
+    const editBtn = document.getElementById('edit-bio-btn');
+    const saveBtn = document.getElementById('save-bio-btn');
+
+    bioText.textContent = bioEdit.value;
+    bioText.style.display = 'block';
+    bioEdit.style.display = 'none';
+    editBtn.style.display = 'inline-block';
+    saveBtn.style.display = 'none';
+
+    // Her kan du legge til kode for å sende til MySQL senere, f.eks. AJAX kall
+    console.log('Bio oppdatert:', bioText.textContent);
+});
+
+// Interesser funksjonalitet
+const checkboxes = document.querySelectorAll('.interests-list input[type="checkbox"]');
+const interestsDisplay = document.querySelector('.interests');
+
+function updateInterests() {
+    const checked = document.querySelectorAll('.interests-list input[type="checkbox"]:checked');
+    if (checked.length > 3) {
+        event.target.checked = false;
+        alert('Du kan maks velge 3 interesser.');
+        return;
+    }
+    const selected = Array.from(checked).map(cb => cb.value);
+    interestsDisplay.textContent = selected.join(' • ');
+}
+
+checkboxes.forEach(cb => cb.addEventListener('change', updateInterests));
+
+// Initial oppdatering
+updateInterests();
+</script>
 
 </body>
 </html>
