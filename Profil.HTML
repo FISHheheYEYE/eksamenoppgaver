@@ -18,6 +18,7 @@
     <!-- PROFIL KORT -->
     <section class="profile-card">
         <button id="edit-mode-btn">Edit</button>
+        <div id="save-status" style="font-size: 12px; color: green; margin-top: 5px; display: none;">Lagret!</div>
         <h2>Ola, 18</h2>
         <p class="interests">🎮 Gaming • 🎵 Musikk • ⚽ Sport</p>
     </section>
@@ -106,10 +107,20 @@ async function saveProfile() {
         .filter(cb => cb.checked)
         .map(cb => cb.value);
 
+    // Use current bio value - either from edit field or display text
+    const currentBio = isEditMode ? bioEdit.value : bioText.textContent;
+
     const profile = {
-        bio: bioEdit.value,
+        bio: currentBio,
         interests: selected
     };
+
+    console.log('Saving profile:', profile);
+
+    const statusEl = document.getElementById('save-status');
+    statusEl.textContent = 'Lagrer...';
+    statusEl.style.color = 'orange';
+    statusEl.style.display = 'block';
 
     try {
         const response = await fetch('/profile', {
@@ -119,9 +130,23 @@ async function saveProfile() {
         });
         if (!response.ok) throw new Error('Feil ved lagring av profil');
         const result = await response.json();
-        console.log('Profil lagret:', result);
+        console.log('Profile saved successfully:', result);
+
+        statusEl.textContent = 'Lagret!';
+        statusEl.style.color = 'green';
+        setTimeout(() => {
+            statusEl.style.display = 'none';
+        }, 2000);
+
+        return true;
     } catch (error) {
-        console.error(error);
+        console.error('Save failed:', error);
+        statusEl.textContent = 'Feil ved lagring';
+        statusEl.style.color = 'red';
+        setTimeout(() => {
+            statusEl.style.display = 'none';
+        }, 3000);
+        return false;
     }
 }
 
@@ -134,9 +159,23 @@ function updateInterests(event) {
     }
     const selected = Array.from(checked).map(cb => cb.value);
     interestsDisplay.textContent = selected.join(' • ');
+
+    // Auto-save when interests change
+    if (isEditMode) {
+        saveProfile();
+    }
 }
 
-editModeBtn.addEventListener('click', function() {
+editModeBtn.addEventListener('click', async function() {
+    if (isEditMode) {
+        // Exiting edit mode - save changes
+        const saved = await saveProfile();
+        if (saved) {
+            console.log('Changes saved successfully');
+        }
+        updateInterests();
+    }
+
     isEditMode = !isEditMode;
     const editOnlyElements = document.querySelectorAll('.edit-only');
     editOnlyElements.forEach(el => {
@@ -167,6 +206,14 @@ saveBioBtn.addEventListener('click', async function() {
 checkboxes.forEach(cb => cb.addEventListener('change', updateInterests));
 
 loadProfile();
+
+// Auto-save when leaving the page
+window.addEventListener('beforeunload', async function() {
+    if (isEditMode) {
+        // Save current state if still in edit mode
+        await saveProfile();
+    }
+});
 </script>
 
 </body>
