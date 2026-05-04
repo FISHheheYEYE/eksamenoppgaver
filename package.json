@@ -1,0 +1,25 @@
+{
+  "name": "eksamenoppgaver",
+  "version": "1.0.0",
+  "description": "Eksamenoppgaver til rare oppgaver",
+  "main": "Server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FISHheheYEYE/eksamenoppgaver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/FISHheheYEYE/eksamenoppgaver/issues"
+  },
+  "homepage": "https://github.com/FISHheheYEYE/eksamenoppgaver#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

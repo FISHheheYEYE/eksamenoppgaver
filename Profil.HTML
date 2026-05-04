@@ -70,9 +70,73 @@
 </nav>
 
 <script>
+const editModeBtn = document.getElementById('edit-mode-btn');
+const editBioBtn = document.getElementById('edit-bio-btn');
+const saveBioBtn = document.getElementById('save-bio-btn');
+const bioText = document.getElementById('bio-text');
+const bioEdit = document.getElementById('bio-edit');
+const interestsDisplay = document.querySelector('.interests');
+const checkboxes = document.querySelectorAll('.interests-list input[type="checkbox"]');
 let isEditMode = false;
 
-document.getElementById('edit-mode-btn').addEventListener('click', function() {
+function setProfile(profile) {
+    bioText.textContent = profile.bio || '';
+    bioEdit.value = profile.bio || '';
+
+    checkboxes.forEach(cb => {
+        cb.checked = (profile.interests || []).includes(cb.value);
+    });
+
+    updateInterests();
+}
+
+async function loadProfile() {
+    try {
+        const response = await fetch('/profile');
+        if (!response.ok) throw new Error('Feil ved henting av profil');
+        const profile = await response.json();
+        setProfile(profile);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function saveProfile() {
+    const selected = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    const profile = {
+        bio: bioEdit.value,
+        interests: selected
+    };
+
+    try {
+        const response = await fetch('/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profile)
+        });
+        if (!response.ok) throw new Error('Feil ved lagring av profil');
+        const result = await response.json();
+        console.log('Profil lagret:', result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function updateInterests(event) {
+    const checked = document.querySelectorAll('.interests-list input[type="checkbox"]:checked');
+    if (checked.length > 3) {
+        if (event) event.target.checked = false;
+        alert('Du kan maks velge 3 interesser.');
+        return;
+    }
+    const selected = Array.from(checked).map(cb => cb.value);
+    interestsDisplay.textContent = selected.join(' • ');
+}
+
+editModeBtn.addEventListener('click', function() {
     isEditMode = !isEditMode;
     const editOnlyElements = document.querySelectorAll('.edit-only');
     editOnlyElements.forEach(el => {
@@ -81,54 +145,28 @@ document.getElementById('edit-mode-btn').addEventListener('click', function() {
     this.textContent = isEditMode ? 'Done' : 'Edit';
 });
 
-document.getElementById('edit-bio-btn').addEventListener('click', function() {
-    const bioText = document.getElementById('bio-text');
-    const bioEdit = document.getElementById('bio-edit');
-    const editBtn = document.getElementById('edit-bio-btn');
-    const saveBtn = document.getElementById('save-bio-btn');
-
+editBioBtn.addEventListener('click', function() {
     bioEdit.value = bioText.textContent;
     bioText.style.display = 'none';
     bioEdit.style.display = 'block';
-    editBtn.style.display = 'none';
-    saveBtn.style.display = 'inline-block';
+    editBioBtn.style.display = 'none';
+    saveBioBtn.style.display = 'inline-block';
 });
 
-document.getElementById('save-bio-btn').addEventListener('click', function() {
-    const bioText = document.getElementById('bio-text');
-    const bioEdit = document.getElementById('bio-edit');
-    const editBtn = document.getElementById('edit-bio-btn');
-    const saveBtn = document.getElementById('save-bio-btn');
-
+saveBioBtn.addEventListener('click', async function() {
     bioText.textContent = bioEdit.value;
     bioText.style.display = 'block';
     bioEdit.style.display = 'none';
-    editBtn.style.display = 'inline-block';
-    saveBtn.style.display = 'none';
+    editBioBtn.style.display = 'inline-block';
+    saveBioBtn.style.display = 'none';
 
-    // Her kan du legge til kode for å sende til MySQL senere, f.eks. AJAX kall
-    console.log('Bio oppdatert:', bioText.textContent);
+    updateInterests();
+    await saveProfile();
 });
-
-// Interesser funksjonalitet
-const checkboxes = document.querySelectorAll('.interests-list input[type="checkbox"]');
-const interestsDisplay = document.querySelector('.interests');
-
-function updateInterests() {
-    const checked = document.querySelectorAll('.interests-list input[type="checkbox"]:checked');
-    if (checked.length > 3) {
-        event.target.checked = false;
-        alert('Du kan maks velge 3 interesser.');
-        return;
-    }
-    const selected = Array.from(checked).map(cb => cb.value);
-    interestsDisplay.textContent = selected.join(' • ');
-}
 
 checkboxes.forEach(cb => cb.addEventListener('change', updateInterests));
 
-// Initial oppdatering
-updateInterests();
+loadProfile();
 </script>
 
 </body>
