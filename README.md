@@ -14,24 +14,25 @@ Dette prosjektet er en enkel nettside med profil-side og en liten Node.js-server
 
 1. Installer MySQL på maskinen din hvis du ikke allerede har det.
 2. Åpne terminal eller kommandolinje i prosjektmappen.
-3. Kopier `.env`-filen eller oppdater de riktige verdiene:
+3. Pass på at du står i mappen som inneholder `package.json` og `Server.js`.
+4. Kopier `.env`-filen eller oppdater de riktige verdiene:
    - `DB_HOST` (som regel `localhost`)
    - `DB_USER` (for eksempel `root`)
    - `DB_PASSWORD`
    - `DB_NAME` (for eksempel `eksamenoppgaver`)
    - `DB_PORT` (standard `3306`)
-4. Installer avhengigheter:
+5. Installer avhengigheter:
    ```bash
    npm install
    ```
-5. Start serveren:
+6. Start serveren:
    ```bash
    npm start
    ```
-6. Åpne siden i nettleseren:
+7. Åpne siden i nettleseren:
    - `http://localhost:3000/`
 
-> Bruk samme mappe som inneholder `package.json`, `Server.js` og `Profil.HTML`.
+> Hvis `npm start` gir "Missing script: \"start\"", betyr det at du ikke er i riktig prosjektmappe eller at `package.json` mangler i mappen.
 ## Hvordan bruke profilen
 
 - Trykk `Edit` for å vise redigeringsfeltet
