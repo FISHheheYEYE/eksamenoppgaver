@@ -4,6 +4,9 @@ node_modules/
 # Local profile data stored by your server
 profile.json
 
+# SQLite database file
+database.db
+
 # Environment variables and secret keys
 .env
 

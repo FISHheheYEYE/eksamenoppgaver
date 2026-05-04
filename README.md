@@ -1,32 +1,37 @@
 # Eksamenoppgaver
 
-Dette prosjektet er en enkel nettside med profil-side og en liten Node.js-server som lagrer data lokalt.
+Dette prosjektet er en enkel nettside med profil-side og en liten Node.js-server som lagrer data i MySQL.
 
 ## Hva prosjektet gjør
 
 - `Profil.HTML` viser en profil-side med bio og interesser
 - `Server.js` kjører en Express-server på `http://localhost:3000`
-- Serveren lagrer data i `profile.json`
-- `GET /profile` henter lagret profil
-- `POST /profile` sender og lagrer ny bio og interesser
+- Serveren bruker MySQL for å lagre data
+- `GET /profile` henter lagret profil fra MySQL-databasen
+- `POST /profile` sender og lagrer ny bio og interesser i MySQL-databasen
 
 ## Hvordan sette det opp
 
-1. Åpne terminal i prosjektmappen:
-   ```powershell
-   cd C:\Users\edu5288134\Documents\Utvikling\eksamenoppgaver
-   ```
-2. Installer avhengigheter:
-   ```powershell
+1. Installer MySQL på maskinen din hvis du ikke allerede har det.
+2. Åpne terminal eller kommandolinje i prosjektmappen.
+3. Kopier `.env`-filen eller oppdater de riktige verdiene:
+   - `DB_HOST` (som regel `localhost`)
+   - `DB_USER` (for eksempel `root`)
+   - `DB_PASSWORD`
+   - `DB_NAME` (for eksempel `eksamenoppgaver`)
+   - `DB_PORT` (standard `3306`)
+4. Installer avhengigheter:
+   ```bash
    npm install
    ```
-3. Start serveren:
-   ```powershell
+5. Start serveren:
+   ```bash
    npm start
    ```
-4. Åpne siden i nettleseren:
+6. Åpne siden i nettleseren:
    - `http://localhost:3000/`
 
+> Bruk samme mappe som inneholder `package.json`, `Server.js` og `Profil.HTML`.
 ## Hvordan bruke profilen
 
 - Trykk `Edit` for å vise redigeringsfeltet
@@ -36,11 +41,10 @@ Dette prosjektet er en enkel nettside med profil-side og en liten Node.js-server
 
 ## Filer i prosjektet
 
-- `Server.js` – Express-serveren med GET/POST-endepunkter
+- `Server.js` – Express-serveren med GET/POST-endepunkter og MySQL-lagring
 - `Profil.HTML` – profil-siden som bruker JavaScript for å hente/lagre data
 - `Profil.css` – stilark for profilen
 - `package.json` – prosjektmetadata og startskript
-- `profile.json` – lagrer profildata lokalt (genereres når du lagrer)
 - `.gitignore` – filer som ikke skal legges på GitHub
 - `.env` – miljøvariabler og private innstillinger
 
@@ -49,7 +53,7 @@ Dette prosjektet er en enkel nettside med profil-side og en liten Node.js-server
 Det er lurt å ikke laste opp disse filene til GitHub:
 
 - `node_modules/`
-- `profile.json`
+- `database.db`
 - `.env`
 - `*.log`
 
@@ -63,6 +67,6 @@ Bruk `.gitignore` for å utelate dem.
 ## Mulige videre forbedringer
 
 - Legge til brukerautentisering
-- Sette opp ekte database i stedet for `profile.json`
+- Sette opp flere tabeller eller relasjoner i databasen
 - Lage en startside (`hjem.html`) som også returneres fra `/`
 
