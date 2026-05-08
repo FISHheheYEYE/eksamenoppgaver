@@ -2,7 +2,7 @@
   "name": "eksamenoppgaver",
   "version": "1.0.0",
   "description": "Eksamenoppgaver til rare oppgaver",
-  "main": "Server.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"

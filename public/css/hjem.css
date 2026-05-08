@@ -1,7 +1,12 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #ff4d6d;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* HEADER */
@@ -9,12 +14,33 @@ header {
     display: block;
     background-color: #ffffff;
     background-size: 25%;
-    backround position: center;
     color: black;
     text-align: center;
     padding: 15px;
     width: 50%;
     margin: 250px auto;
+}
+
+.welcome-section {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    color: #ff4d6d;
+    font-weight: bold;
+    font-size: 32px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.hobbyreise-section {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-color: rgb(232, 232, 232);
+    font-weight: bold;
+    font-size: 32px;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 

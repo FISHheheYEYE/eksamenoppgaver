@@ -61,17 +61,34 @@ async function initDatabase() {
   }
 }
 
+// ─── Page routes ────────────────────────────────────────────────────────────
+
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Profil.HTML'));
+  res.sendFile(path.join(__dirname, 'pages', 'hjem.html'));
 });
 
-app.get('/profile', async (req, res) => {
+app.get('/hjem', (req, res) => {
+  res.sendFile(path.join(__dirname, 'pages', 'hjem.html'));
+});
+
+app.get('/profil', (req, res) => {
+  res.sendFile(path.join(__dirname, 'pages', 'profil.html'));
+});
+
+app.get('/melding', (req, res) => {
+  res.sendFile(path.join(__dirname, 'pages', 'melding.html'));
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ─── API routes ──────────────────────────────────────────────────────────────
+
+app.get('/api/profile', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT bio, interests FROM profile WHERE id = 1');
     if (rows.length === 0) {
       return res.json({ bio: '', interests: [] });
     }
-
     const row = rows[0];
     res.json({
       bio: row.bio || '',
@@ -82,12 +99,11 @@ app.get('/profile', async (req, res) => {
   }
 });
 
-app.post('/profile', async (req, res) => {
+app.post('/api/profile', async (req, res) => {
   const { bio, interests } = req.body;
   if (typeof bio !== 'string' || !Array.isArray(interests)) {
     return res.status(400).json({ error: 'Ugyldig profildata' });
   }
-
   try {
     await pool.query('UPDATE profile SET bio = ?, interests = ? WHERE id = 1', [bio, interests.join('|')]);
     res.json({ status: 'saved' });
@@ -95,6 +111,8 @@ app.post('/profile', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// ─── Start ───────────────────────────────────────────────────────────────────
 
 async function startServer() {
   try {

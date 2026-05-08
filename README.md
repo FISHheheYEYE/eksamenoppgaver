@@ -58,7 +58,7 @@ Det er lurt å ikke laste opp disse filene til GitHub:
 - `.env`
 - `*.log`
 
-Bruk `.gitignore` for å utelate dem.
+Bruk `.gitignore` for å utelate dem
 
 ## Tips
 
